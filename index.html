@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saree Shop Management System</title>
+    <style>
+        :root {
+            --primary-color: #8B4513;  /* Maroon Brown */
+            --secondary-color: #D2B48C; /* Cream/Gold */
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            background-color: var(--primary-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-right: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-button:hover {
+            background-color: #6B3E23;
+        }
+
+        .nav-button.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 15px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .main-container.active {
+            display: block;
+        }
+
+        /* Billing Page */
+        .billing-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr 450px;
+            gap: 15px;
+            height: 100%;
+        }
+
+        /* Inventory Page */
+        .inventory-container {
+            padding: 15px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .bill-list {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .bill-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .bill-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .bill-number {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .bill-date {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .bill-customer {
+            margin-bottom: 5px;
+        }
+
+        .bill-total {
+            font-weight: bold;
+            color: green;
+        }
+
+        .bill-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        /* Shared Styles (from previous billing page) */
+        .categories-section, .items-section, .billing-section {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            overflow-y: auto;
+        }
+
+        .categories-title, .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .category {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .category:hover {
+            background-color: #f8f8f8;
+        }
+
+        .category.active {
+            background-color: #f8f8f8;
+            border-left: 4px solid var(--primary-color);
+            font-weight: bold;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .item-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .item-code {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 13px;
+        }
+
+        .item-name {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .item-price {
+            color: green;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .item-category {
+            font-size: 11px; 
+            color:#666;
+            margin-top: 4px;
+        }
+
+        .item-stock {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .low-stock {
+            background-color: #ffdddd;
+            color: #d32f2f;
+        }
+
+        .out-of-stock {
+            background-color: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        .bill-table th {
+            background-color: var(--secondary-color);
+            padding: 8px;
+            font-weight: bold;
+        }
+
+        .bill-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f5f5f5;
+        }
+
+        .grand-total {
+            font-weight: bold;
+            font-size: 15px;
+            background-color: var(--secondary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #6B3E23;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .customer-details {
+            margin-bottom: 15px;
+        }
+
+        .payment-methods {
+            margin-top: 15px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .payment-method input {
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .discount-box {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .discount-input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .discount-label {
+            font-weight: bold;
+        }
+
+        .empty-category {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Stock Management Page */
+        .stock-container {
+            padding: 15px;
+        }
+
+        .stock-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .stock-table th {
+            background-color: var(--secondary-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .stock-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .stock-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .stock-filter {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .stock-filter select, .stock-filter input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .best-sellers {
+            margin-top: 30px;
+        }
+
+        .best-seller-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .best-seller-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .restock-needed {
+            margin-top: 30px;
+        }
+
+        .restock-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .restock-item:hover {
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-button active" onclick="showPage('billing')">Billing</button>
+        <button class="nav-button" onclick="showPage('inventory')">Inventory</button>
+        <button class="nav-button" onclick="showPage('stock')">Stock Management</button>
+    </div>
+
+    <!-- Billing Page -->
+    <div id="billing-page" class="main-container active">
+        <div class="billing-layout">
+            <!-- Categories Section -->
+            <div class="categories-section">
+                <div class="categories-title">Product Categories</div>
+                <div class="category active">All Products</div>
+                <div class="category">Sarees</div>
+                <div class="category">Chudidhars</div>
+                <div class="category">Blouses</div>
+                <div class="category">Nighties</div>
+                <div class="category">Dhotis</div>
+                <div class="category">In-skirts</div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="items-section">
+                <div class="section-title">Available Products</div>
+                <div class="items-grid" id="itemsGrid">
+                    <!-- Items will be added here dynamically -->
+                </div>
+            </div>
+
+            <!-- Billing Section -->
+            <div class="billing-section">
+                <div class="section-title">Billing Details</div>
+                
+                <div class="customer-details">
+                    <input type="text" id="billNumber" readonly class="form-control" placeholder="Bill Number" value="1001">
+                    <input type="date" id="billDate" required class="form-control" value="">
+                    <input type="text" id="customerName" class="form-control" placeholder="Customer Name">
+                    <input type="text" id="customerPhone" class="form-control" placeholder="Customer Phone">
+                </div>
+                
+                <table class="bill-table" id="billTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billItems"></tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="4">Subtotal</td>
+                            <td id="subtotalAmount">₹0</td>
+                            <td></td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td colspan="4">Grand Total</td>
+                            <td id="grandTotal">₹0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="discount-box">
+                    <span class="discount-label">Discount (%):</span>
+                    <input type="number" id="discountPercentage" class="discount-input" min="0" max="100" value="0" onchange="calculateGrandTotal()">
+                </div>
+                
+                <div class="payment-methods">
+                    <div class="section-title">Payment Method</div>
+                    <div class="payment-method">
+                        <input type="radio" id="cash" name="payment" checked>
+                        <label for="cash">Cash</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="radio" id="card" name="payment">
+                        <label for="card">Card</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="radio" id="upi" name="payment">
+                        <label for="upi">UPI</label>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" id="printBillBtn">Print Bill</button>
+                    <button class="btn" id="saveBillBtn">Save Bill</button>
+                    <button class="btn" id="newBillBtn">New Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Page -->
+    <div id="inventory-page" class="main-container">
+        <div class="inventory-container">
+            <h2>Saved Bills</h2>
+            <div class="search-box">
+                <input type="text" id="searchBills" placeholder="Search bills by customer name, phone, or bill number..." oninput="filterBills()">
+            </div>
+            <div class="bill-list" id="billList">
+                <!-- Saved bills will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock Management Page -->
+    <div id="stock-page" class="main-container">
+        <div class="stock-container">
+            <h2>Stock Management</h2>
+            
+            <div class="stock-summary">
+                <div class="summary-card">
+                    <h3>Total Products</h3>
+                    <div class="value" id="totalProducts">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Items</h3>
+                    <div class="value" id="totalItems">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Low Stock</h3>
+                    <div class="value" id="lowStockItems">0</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Out of Stock</h3>
+                    <div class="value" id="outOfStockItems">0</div>
+                </div>
+            </div>
+            
+            <div class="stock-filter">
+                <select id="stockCategoryFilter" onchange="filterStock()">
+                    <option value="">All Categories</option>
+                    <option value="Sarees">Sarees</option>
+                    <option value="Chudidhars">Chudidhars</option>
+                    <option value="Blouses">Blouses</option>
+                    <option value="Nighties">Nighties</option>
+                    <option value="Dhotis">Dhotis</option>
+                    <option value="In-skirts">In-skirts</option>
+                </select>
+                <input type="text" id="stockSearch" placeholder="Search products..." oninput="filterStock()">
+            </div>
+            
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Sold</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="stockTableBody">
+                    <!-- Stock items will be added here dynamically -->
+                </tbody>
+            </table>
+            
+            <div class="best-sellers">
+                <h3>Best Selling Products</h3>
+                <div id="bestSellersList">
+                    <!-- Best sellers will be added here dynamically -->
+                </div>
+            </div>
+            
+            <div class="restock-needed">
+                <h3>Items Needing Restock</h3>
+                <div id="restockList">
+                    <!-- Items needing restock will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== GLOBAL VARIABLES ==========
+        let savedBills = JSON.parse(localStorage.getItem('sareeShopBills')) || [];
+        let products = JSON.parse(localStorage.getItem('sareeShopProducts')) || [];
+        let currentBillNumber = savedBills.length > 0 ? 
+            Math.max(...savedBills.map(bill => parseInt(bill.billNumber))) + 1 : 1001;
+
+        // Initialize products if empty
+        if (products.length === 0) {
+            products = [
+                // ====== SAREES ======
+                // KHP Series
+                { code: "KHP01-06", name: "Ekkath kotta Saree", price: 840, category: "Sarees", qty: 6, sold: 0 },
+                { code: "KHP02-1-10", name: "Ekkath kotta Saree", price: 680, category: "Sarees", qty: 10, sold: 0 },
+                { code: "KHP3-1-5", name: "Cotton Saree", price: 1250, category: "Sarees", qty: 5, sold: 0 },
+                { code: "KHP3-6-11", name: "Cotton Saree", price: 1350, category: "Sarees", qty: 6, sold: 0 },
+                
+                // LTN Series
+                { code: "LTN-2646-1-5", name: "Zari Border Saree", price: 780, category: "Sarees", qty: 5, sold: 0 },
+                { code: "LTN-8790-1-2", name: "Zari Border Saree", price: 920, category: "Sarees", qty: 2, sold: 0 },
+                { code: "LTN-9227-1-5", name: "Zari Border Saree", price: 750, category: "Sarees", qty: 5, sold: 0 },
+                { code: "LTN-6551-4", name: "Muthukattam Saree", price: 900, category: "Sarees", qty: 4, sold: 0 },
+                { code: "LTN-6091-10", name: "Plain Kanchi Border", price: 600, category: "Sarees", qty: 10, sold: 0 },
+                { code: "LTN-9430-6", name: "Plain Kanchi Border", price: 1100, category: "Sarees", qty: 6, sold: 0 },
+                { code: "LTN-1084-5", name: "Butta Kanchi Border", price: 1000, category: "Sarees", qty: 5, sold: 0 },
+                { code: "LTN-6870-8", name: "Butta Kanchi Border", price: 970, category: "Sarees", qty: 8, sold: 0 },
+                { code: "LTN-5977-5", name: "Agarlic Cotton Silk", price: 1550, category: "Sarees", qty: 5, sold: 0 },
+                { code: "LTN-8739-5", name: "Agarlic Seer Pallu", price: 1700, category: "Sarees", qty: 5, sold: 0 },
+                { code: "LTN-9604-5", name: "Agarlic Cotton Butta", price: 3450, category: "Sarees", qty: 5, sold: 0 },
+                
+                // RVV Series
+                { code: "RVV-1-14", name: "Kalyani Cotton", price: 850, category: "Sarees", qty: 14, sold: 0 },
+                { code: "RVV-2-7", name: "Kalyani Big Border", price: 900, category: "Sarees", qty: 7, sold: 0 },
+                { code: "RVV-3-13", name: "Zari Border", price: 1100, category: "Sarees", qty: 13, sold: 0 },
+                { code: "RVV-4-5", name: "Muthukattam", price: 1090, category: "Sarees", qty: 5, sold: 0 },
+                { code: "RVV-5-7", name: "Plain Kanchi", price: 1650, category: "Sarees", qty: 8, sold: 0 },
+                { code: "RVV-6-8", name: "Plain Kanchi", price: 1800, category: "Sarees", qty: 8, sold: 0 },
+                { code: "RVV-7-1", name: "Butta Kanchi", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                
+                // SSE Series
+                { code: "SSE-0205", name: "Pathik Saree", price: 850, category: "Sarees", qty: 1, sold: 0 },
+                { code: "SSE-19", name: "Mallika 5.50 Mtr", price: 550, category: "Sarees", qty: 20, sold: 0 },
+                { code: "SSE-013", name: "Pathik Chudi", price: 1400, category: "Sarees", qty: 1, sold: 0 },
+                { code: "SSE-0166", name: "Pathik Chudi", price: 1090, category: "Sarees", qty: 2, sold: 0 },
+                { code: "SSE-0204", name: "Pathik Saree", price: 1650, category: "Sarees", qty: 3, sold: 0 },
+                { code: "SSE-0200", name: "Pathik Saree", price: 750, category: "Sarees", qty: 1, sold: 0 },
+                { code: "SSE-145", name: "Malliga Cool", price: 585, category: "Sarees", qty: 10, sold: 0 },
+                { code: "SSE-199", name: "Malliga Cool", price: 1000, category: "Sarees", qty: 9, sold: 0 },
+                { code: "SSE-093", name: "SSS Kotta", price: 600, category: "Sarees", qty: 10, sold: 0 },
+                { code: "SSE-95", name: "Jaikali", price: 600, category: "Sarees", qty: 5, sold: 0 },
+                
+                // SSSK Series
+                { code: "SSSK-1-8", name: "Ekkath Kotta", price: 950, category: "Sarees", qty: 8, sold: 0 },
+                { code: "SSSK-2-1-20", name: "Ekkath Kotta", price: 1550, category: "Sarees", qty: 20, sold: 0 },
+                
+                // VWCS Series
+                { code: "VWCS-1-1-2", name: "Zari Border", price: 1150, category: "Sarees", qty: 2, sold: 0 },
+                { code: "VWCS-1-1-3-4", name: "Zari Border", price: 1250, category: "Sarees", qty: 2, sold: 0 },
+                { code: "VWCS-1-1-5-7", name: "Zari Border", price: 1300, category: "Sarees", qty: 3, sold: 0 },
+                { code: "VWCS-2-1-6", name: "Muthukattam", price: 1390, category: "Sarees", qty: 6, sold: 0 },
+                { code: "VWCS-3-1-15", name: "Plain Kanchi", price: 1650, category: "Sarees", qty: 15, sold: 0 },
+                { code: "VWCS-3-16=20", name: "Plain Kanchi", price: 1570, category: "Sarees", qty: 5, sold: 0 },
+                { code: "VWCS-4-1-7", name: "Butta Kanchi", price: 1600, category: "Sarees", qty: 5, sold: 0 },
+                { code: "VWCS-4-8-10", name: "Butta Kanchi", price: 1720, category: "Sarees", qty: 5, sold: 0 },
+                { code: "VWCS-5-1-14", name: "Agarlic Silk", price: 1360, category: "Sarees", qty: 14, sold: 0 },
+                { code: "VWCS-6-1-7", name: "Seer Pallu", price: 1260, category: "Sarees", qty: 7, sold: 0 },
+                { code: "VWCS-7-1-2", name: "Agarlic Butta", price: 1500, category: "Sarees", qty: 2, sold: 0 },
+                { code: "VWCS-8-1-3", name: "Vaiaroosi", price: 1800, category: "Sarees", qty: 3, sold: 0 },
+                { code: "VWCS-9-1-14", name: "Kattam Butta", price: 1850, category: "Sarees", qty: 14, sold: 0 },
+                { code: "VWCS-10-1-8", name: "Muthukattam", price: 2000, category: "Sarees", qty: 8, sold: 0 },
+                { code: "VWCS-11-1-5", name: "Plain Araimadam", price: 2100, category: "Sarees", qty: 5, sold: 0 },
+                { code: "VWCS-12-1-4", name: "Plain Kanchi", price: 2450, category: "Sarees", qty: 4, sold: 0 },
+                
+                // MG Series (Sarees)
+                { code: "MG-1324-1", name: "Cotton Saree", price: 1450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1324-2", name: "Cotton Saree", price: 1450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1030-1", name: "Cotton Saree", price: 1800, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1030-2", name: "Cotton Saree", price: 1800, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1004-1", name: "Cotton Saree", price: 2000, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1004-2", name: "Cotton Saree", price: 2000, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1323-1", name: "Cotton Saree", price: 1450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1323-2", name: "Cotton Saree", price: 1450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1323-3", name: "Cotton Saree", price: 1450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1326-1", name: "Cotton Saree", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1326-2", name: "Cotton Saree", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1326-3", name: "Cotton Saree", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1326-4", name: "Cotton Saree", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-1326-5", name: "Cotton Saree", price: 1600, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-1", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-2", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-3", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-4", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-5", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-6", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-8", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-9", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                { code: "MG-K3-10", name: "Cotton Saree", price: 570, category: "Sarees", qty: 1, sold: 0 },
+                
+                // OS Series (Old Stock)
+                { code: "OS-1", name: "Kalyani Cotton", price: 900, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-2", name: "Kalyani Cotton", price: 900, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-3", name: "Kalyani Cotton", price: 900, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-4", name: "Kalyani Cotton", price: 850, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-5", name: "Kalyani Cotton", price: 850, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-6", name: "Kalyani Cotton", price: 900, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-7", name: "Kalyani Cotton", price: 1350, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-8", name: "Kalyani Cotton", price: 1350, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-9", name: "Kalyani Cotton", price: 1350, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-10", name: "9 Yards Kalyani", price: 2000, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-11", name: "9 Yards Kalyani", price: 2000, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-12", name: "6 Yards Kalyani", price: 1100, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-13", name: "6 Yards Kalyani", price: 1100, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-14", name: "Kalyani Cotton", price: 1200, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-15", name: "Kalyani Cotton", price: 1200, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-16", name: "Kalyani Cotton", price: 1200, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-17", name: "Kalyani Cotton", price: 450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-18", name: "Kalyani Cotton", price: 450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-19", name: "Kalyani Cotton", price: 450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-20", name: "Kalyani Cotton", price: 450, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-21", name: "Kalyani Cotton", price: 750, category: "Sarees", qty: 1, sold: 0 },
+                { code: "OS-22", name: "Kalyani Cotton", price: 750, category: "Sarees", qty: 1, sold: 0 },
+                
+                // ====== CHUDIDHARS ======
+                // MG Series
+                { code: "MG-VC87-1-1", name: "Chudidhar", price: 1400, category: "Chudidhars", qty: 1, sold: 0 },
+                { code: "MG-VC87-2-1", name: "Chudidhar", price: 1200, category: "Chudidhars", qty: 1, sold: 0 },
+                { code: "MG-VC87-2-2", name: "Chudidhar", price: 1200, category: "Chudidhars", qty: 1, sold: 0 },
+                { code: "MG-VC87-2-3", name: "Chudidhar", price: 1200, category: "Chudidhars", qty: 1, sold: 0 },
+                { code: "MG-VC87-3-1", name: "Chudidhar", price: 1200, category: "Chudidhars", qty: 1, sold: 0 },
+                
+                // SC Series
+                { code: "SC-101-1-15", name: "Chudidhar", price: 1000, category: "Chudidhars", qty: 15, sold: 0 },
+                { code: "SC-338-5", name: "Chudidhar", price: 1300, category: "Chudidhars", qty: 5, sold: 0 },
+                { code: "SC-307-3", name: "Chudidhar", price: 1650, category: "Chudidhars", qty: 3, sold: 0 }
+            ];
+            
+            localStorage.setItem('sareeShopProducts', JSON.stringify(products));
+        }
+
+        // ========== PAGE MANAGEMENT ==========
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.main-container').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Refresh inventory if needed
+            if (pageId === 'inventory') {
+                displaySavedBills();
+            } else if (pageId === 'stock') {
+                displayStockSummary();
+                displayStockTable();
+                displayBestSellers();
+                displayRestockNeeded();
+            }
+        }
+
+        // ========== BILLING PAGE FUNCTIONS ==========
+        // Initialize the billing page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize bill number and date
+            document.getElementById('billNumber').value = currentBillNumber;
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('billDate').value = today;
+            
+            // Display all products initially
+            displayProducts(products);
+            
+            // Set up category click events
+            setupCategories();
+            
+            // Set up payment method change
+            setupPaymentMethods();
+            
+            // Set up button events
+            setupButtonEvents();
+        });
+
+        // Display products in the items grid
+        function displayProducts(productsToDisplay) {
+            const itemsGrid = document.getElementById('itemsGrid');
+            itemsGrid.innerHTML = '';
+            
+            if (productsToDisplay.length === 0) {
+                itemsGrid.innerHTML = '<div class="empty-category">No products available in this category</div>';
+                return;
+            }
+            
+            productsToDisplay.forEach(product => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                // Determine stock status class
+                let stockStatusClass = '';
+                if (product.qty <= 0) {
+                    stockStatusClass = 'out-of-stock';
+                } else if (product.qty <= 3) {
+                    stockStatusClass = 'low-stock';
+                }
+                
+                itemCard.innerHTML = `
+                    <div class="item-code">${product.code}</div>
+                    <div class="item-name">${product.name}</div>
+                    <div class="item-price">₹${product.price}</div>
+                    <div class="item-category">${product.category}</div>
+                    <div class="item-stock ${stockStatusClass}">${product.qty > 0 ? product.qty : 'Out'}</div>
+                `;
+                
+                // Only allow adding to bill if in stock
+                if (product.qty > 0) {
+                    itemCard.addEventListener('click', function() {
+                        addToBill(product);
+                    });
+                } else {
+                    itemCard.style.opacity = '0.7';
+                    itemCard.style.cursor = 'not-allowed';
+                }
+                
+                itemsGrid.appendChild(itemCard);
+            });
+        }
+
+        // Set up category filtering
+        function setupCategories() {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                category.addEventListener('click', function() {
+                    // Update active category
+                    document.querySelector('.category.active').classList.remove('active');
+                    this.classList.add('active');
+                    
+                    // Filter products
+                    const categoryName = this.textContent;
+                    if (categoryName === "All Products") {
+                        displayProducts(products);
+                    } else {
+                        const filteredProducts = products.filter(product => product.category === categoryName);
+                        
+                        // Special handling for empty categories
+                        if (filteredProducts.length === 0 && 
+                            ["Blouses", "Nighties", "Dhotis", "In-skirts"].includes(categoryName)) {
+                            const itemsGrid = document.getElementById('itemsGrid');
+                            itemsGrid.innerHTML = `<div class="empty-category">No ${categoryName.toLowerCase()} available in inventory</div>`;
+                        } else {
+                            displayProducts(filteredProducts);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Set up payment methods
+        function setupPaymentMethods() {
+            const paymentMethods = document.querySelectorAll('input[name="payment"]');
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function() {
+                    console.log("Payment method changed to:", this.id);
+                });
+            });
+        }
+
+        // Set up button events
+        function setupButtonEvents() {
+            document.getElementById('printBillBtn').addEventListener('click', printBill);
+            document.getElementById('saveBillBtn').addEventListener('click', saveBill);
+            document.getElementById('newBillBtn').addEventListener('click', newBill);
+        }
+
+        // Add product to bill
+        function addToBill(product) {
+            const billItems = document.getElementById('billItems');
+            
+            // Check if item already exists in bill
+            const existingRow = Array.from(billItems.children).find(row => 
+                row.cells[0].textContent === product.code
+            );
+            
+            if (existingRow) {
+                // Check if we have enough stock
+                const currentQty = parseInt(existingRow.cells[3].textContent);
+                if (currentQty >= product.qty) {
+                    alert(`Only ${product.qty} items available in stock!`);
+                    return;
+                }
+                
+                // Increase quantity
+                const qtyCell = existingRow.cells[3];
+                const newQty = currentQty + 1;
+                qtyCell.textContent = newQty;
+                
+                // Update total
+                const price = parseFloat(existingRow.cells[2].textContent.replace('₹', ''));
+                existingRow.cells[4].textContent = `₹${(price * newQty).toFixed(2)}`;
+            } else {
+                // Add new row
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.code}</td>
+                    <td>${product.name}</td>
+                    <td>₹${product.price}</td>
+                    <td>1</td>
+                    <td>₹${product.price}</td>
+                    <td><button class="btn btn-sm" onclick="removeFromBill(this)">Remove</button></td>
+                `;
+                billItems.appendChild(row);
+            }
+            
+            // Update subtotal and grand total
+            updateSubtotal();
+            calculateGrandTotal();
+        }
+
+        // Remove item from bill
+        function removeFromBill(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateSubtotal();
+            calculateGrandTotal();
+        }
+
+        // Update subtotal
+        function updateSubtotal() {
+            const rows = document.getElementById('billItems').children;
+            let subtotal = 0;
+            
+            for (let row of rows) {
+                subtotal += parseFloat(row.cells[4].textContent.replace('₹', ''));
+            }
+            
+            document.getElementById('subtotalAmount').textContent = `₹${subtotal.toFixed(2)}`;
+        }
+
+        // Calculate grand total with discount
+        function calculateGrandTotal() {
+            const subtotal = parseFloat(document.getElementById('subtotalAmount').textContent.replace('₹', '')) || 0;
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+            
+            const discountAmount = subtotal * (discountPercentage / 100);
+            const grandTotal = subtotal - discountAmount;
+            
+            document.getElementById('grandTotal').textContent = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        // Print bill
+        function printBill() {
+            window.print();
+        }
+
+        // Save bill
+        function saveBill() {
+            const billNumber = document.getElementById('billNumber').value;
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+            
+            // Validate
+            if (document.getElementById('billItems').children.length === 0) {
+                alert('Please add items to the bill before saving');
+                return;
+            }
+            
+            // Prepare bill data and update stock
+            const billItems = Array.from(document.getElementById('billItems').children);
+            const itemsData = [];
+            
+            for (let row of billItems) {
+                const code = row.cells[0].textContent;
+                const quantity = parseInt(row.cells[3].textContent);
+                
+                // Find product in inventory
+                const productIndex = products.findIndex(p => p.code === code);
+                if (productIndex !== -1) {
+                    // Update stock
+                    products[productIndex].qty -= quantity;
+                    products[productIndex].sold += quantity;
+                    
+                    // Add to bill items
+                    itemsData.push({
+                        code,
+                        name: row.cells[1].textContent,
+                        price: parseFloat(row.cells[2].textContent.replace('₹', '')),
+                        quantity,
+                        total: parseFloat(row.cells[4].textContent.replace('₹', ''))
+                    });
+                }
+            }
+            
+            // Save updated products
+            localStorage.setItem('sareeShopProducts', JSON.stringify(products));
+            
+            // Prepare bill data
+            const billData = {
+                billNumber,
+                date: document.getElementById('billDate').value,
+                customer: { name: customerName, phone: customerPhone },
+                paymentMethod,
+                items: itemsData,
+                subtotal: parseFloat(document.getElementById('subtotalAmount').textContent.replace('₹', '')),
+                discountPercentage,
+                grandTotal: parseFloat(document.getElementById('grandTotal').textContent.replace('₹', ''))
+            };
+            
+            // Add to saved bills
+            savedBills.push(billData);
+            localStorage.setItem('sareeShopBills', JSON.stringify(savedBills));
+            
+            // Update bill number for next bill
+            currentBillNumber = parseInt(billNumber) + 1;
+            
+            alert(`Bill ${billNumber} saved successfully!`);
+            showPage('inventory');
+        }
+
+        // New bill
+        function newBill() {
+            if (confirm('Start a new bill? Current bill will be cleared.')) {
+                // Clear bill items
+                document.getElementById('billItems').innerHTML = '';
+                
+                // Reset totals
+                document.getElementById('subtotalAmount').textContent = '₹0';
+                document.getElementById('grandTotal').textContent = '₹0';
+                document.getElementById('discountPercentage').value = '0';
+                
+                // Set new bill number
+                document.getElementById('billNumber').value = currentBillNumber;
+                
+                // Reset customer details
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerPhone').value = '';
+                
+                // Set today's date
+                document.getElementById('billDate').value = new Date().toISOString().split('T')[0];
+                
+                // Reset payment method
+                document.getElementById('cash').checked = true;
+            }
+        }
+
+        // ========== INVENTORY PAGE FUNCTIONS ==========
+        // Display saved bills
+        function displaySavedBills() {
+            const billList = document.getElementById('billList');
+            billList.innerHTML = '';
+            
+            if (savedBills.length === 0) {
+                billList.innerHTML = '<div class="empty-category">No bills saved yet</div>';
+                return;
+            }
+            
+            savedBills.forEach(bill => {
+                const billItem = document.createElement('div');
+                billItem.className = 'bill-item';
+                billItem.innerHTML = `
+                    <div class="bill-header">
+                        <span class="bill-number">Bill #${bill.billNumber}</span>
+                        <span class="bill-date">${bill.date}</span>
+                    </div>
+                    <div class="bill-customer">${bill.customer.name || 'No name'} | ${bill.customer.phone || 'No phone'}</div>
+                    <div class="bill-total">₹${bill.grandTotal.toFixed(2)}</div>
+                    <div class="bill-details" id="details-${bill.billNumber}">
+                        <table class="bill-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${bill.items.map(item => `
+                                    <tr>
+                                        <td>${item.code} - ${item.name}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>₹${item.price.toFixed(2)}</td>
+                                        <td>₹${item.total.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Subtotal</td>
+                                    <td>₹${bill.subtotal.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Discount (${bill.discountPercentage}%)</td>
+                                    <td>₹${(bill.subtotal * (bill.discountPercentage/100)).toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Grand Total</td>
+                                    <td>₹${bill.grandTotal.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Payment Method</td>
+                                    <td>${bill.paymentMethod}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+                
+                // Add click event to toggle details
+                billItem.addEventListener('click', function() {
+                    const details = document.getElementById(`details-${bill.billNumber}`);
+                    details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                });
+                
+                billList.appendChild(billItem);
+            });
+        }
+
+        // Filter bills based on search input
+        function filterBills() {
+            const searchTerm = document.getElementById('searchBills').value.toLowerCase();
+            const billItems = document.querySelectorAll('.bill-item');
+            
+            billItems.forEach(item => {
+                const billText = item.textContent.toLowerCase();
+                if (billText.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // ========== STOCK MANAGEMENT PAGE FUNCTIONS ==========
+        // Display stock summary
+        function displayStockSummary() {
+            const totalProducts = products.length;
+            const totalItems = products.reduce((sum, product) => sum + product.qty, 0);
+            const lowStockItems = products.filter(p => p.qty > 0 && p.qty <= 3).length;
+            const outOfStockItems = products.filter(p => p.qty <= 0).length;
+            
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('lowStockItems').textContent = lowStockItems;
+            document.getElementById('outOfStockItems').textContent = outOfStockItems;
+        }
+
+        // Display stock table
+        function displayStockTable() {
+            const stockTableBody = document.getElementById('stockTableBody');
+            stockTableBody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                
+                // Determine stock status class
+                let stockStatusClass = '';
+                if (product.qty <= 0) {
+                    stockStatusClass = 'out-of-stock';
+                } else if (product.qty <= 3) {
+                    stockStatusClass = 'low-stock';
+                }
+                
+                row.innerHTML = `
+                    <td>${product.code}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>₹${product.price}</td>
+                    <td class="${stockStatusClass}">${product.qty}</td>
+                    <td>${product.sold}</td>
+                    <td class="stock-actions">
+                        <button class="btn btn-sm" onclick="addStock('${product.code}')">+ Add</button>
+                        <button class="btn btn-sm" onclick="editProduct('${product.code}')">Edit</button>
+                    </td>
+                `;
+                
+                stockTableBody.appendChild(row);
+            });
+        }
+
+        // Filter stock table
+        function filterStock() {
+            const categoryFilter = document.getElementById('stockCategoryFilter').value;
+            const searchTerm = document.getElementById('stockSearch').value.toLowerCase();
+            
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = !categoryFilter || product.category === categoryFilter;
+                const matchesSearch = !searchTerm || 
+                    product.code.toLowerCase().includes(searchTerm) || 
+                    product.name.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+            
+            const stockTableBody = document.getElementById('stockTableBody');
+            stockTableBody.innerHTML = '';
+            
+            if (filteredProducts.length === 0) {
+                stockTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-category">No products match your criteria</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                
+                // Determine stock status class
+                let stockStatusClass = '';
+                if (product.qty <= 0) {
+                    stockStatusClass = 'out-of-stock';
+                } else if (product.qty <= 3) {
+                    stockStatusClass = 'low-stock';
+                }
+                
+                row.innerHTML = `
+                    <td>${product.code}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>₹${product.price}</td>
+                    <td class="${stockStatusClass}">${product.qty}</td>
+                    <td>${product.sold}</td>
+                    <td class="stock-actions">
+                        <button class="btn btn-sm" onclick="addStock('${product.code}')">+ Add</button>
+                        <button class="btn btn-sm" onclick="editProduct('${product.code}')">Edit</button>
+                    </td>
+                `;
+                
+                stockTableBody.appendChild(row);
+            });
+        }
+
+        // Display best sellers
+        function displayBestSellers() {
+            const bestSellersList = document.getElementById('bestSellersList');
+            bestSellersList.innerHTML = '';
+            
+            // Sort by most sold
+            const sortedBySales = [...products].sort((a, b) => b.sold - a.sold).slice(0, 5);
+            
+            if (sortedBySales.length === 0) {
+                bestSellersList.innerHTML = '<div class="empty-category">No sales data available yet</div>';
+                return;
+            }
+            
+            sortedBySales.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'best-seller-item';
+                item.innerHTML = `
+                    <span>${product.name} (${product.code})</span>
+                    <span>Sold: ${product.sold}</span>
+                `;
+                bestSellersList.appendChild(item);
+            });
+        }
+
+        // Display items needing restock
+        function displayRestockNeeded() {
+            const restockList = document.getElementById('restockList');
+            restockList.innerHTML = '';
+            
+            // Get items with low or no stock
+            const restockItems = products.filter(p => p.qty <= 3);
+            
+            if (restockItems.length === 0) {
+                restockList.innerHTML = '<div class="empty-category">All items have sufficient stock</div>';
+                return;
+            }
+            
+            // Sort by stock level (lowest first)
+            restockItems.sort((a, b) => a.qty - b.qty);
+            
+            restockItems.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'restock-item';
+                item.innerHTML = `
+                    <span>${product.name} (${product.code})</span>
+                    <span>Stock: ${product.qty}</span>
+                `;
+                restockList.appendChild(item);
+            });
+        }
+
+        // Add stock to a product
+        function addStock(productCode) {
+            const product = products.find(p => p.code === productCode);
+            if (!product) return;
+            
+            const quantity = prompt(`Enter quantity to add to ${product.name} (${productCode}):`, '1');
+            if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+                product.qty += parseInt(quantity);
+                localStorage.setItem('sareeShopProducts', JSON.stringify(products));
+                displayStockSummary();
+                displayStockTable();
+                displayRestockNeeded();
+                alert(`Added ${quantity} items to ${product.name}. New stock: ${product.qty}`);
+            }
+        }
+
+        // Edit product details
+        function editProduct(productCode) {
+            const product = products.find(p => p.code === productCode);
+            if (!product) return;
+            
+            const newName = prompt('Enter new product name:', product.name);
+            if (newName === null) return;
+            
+            const newPrice = prompt('Enter new price:', product.price);
+            if (newPrice === null) return;
+            
+            const newCategory = prompt('Enter new category:', product.category);
+            if (newCategory === null) return;
+            
+            // Update product
+            product.name = newName;
+            product.price = parseFloat(newPrice);
+            product.category = newCategory;
+            
+            localStorage.setItem('sareeShopProducts', JSON.stringify(products));
+            displayStockTable();
+            alert('Product updated successfully!');
+        }
+    </script>
+</body>
+</html>

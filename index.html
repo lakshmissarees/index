@@ -145,7 +145,7 @@
             border-radius: 4px;
         }
 
-        /* Shared Styles (from previous billing page) */
+        /* Shared Styles */
         .categories-section, .items-section, .billing-section {
             padding: 15px;
             border-radius: 8px;
@@ -229,21 +229,22 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            background-color: #f0f0f0;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: bold;
+            background-color: #e8f5e9;
+            color: #2e7d32;
         }
 
         .low-stock {
-            background-color: #ffdddd;
-            color: #d32f2f;
+            background-color: #fff8e1;
+            color: #ff8f00;
         }
 
         .out-of-stock {
-            background-color: #ffcdd2;
-            color: #b71c1c;
+            background-color: #ffebee;
+            color: #c62828;
         }
 
         .form-control {
@@ -269,7 +270,7 @@
         }
 
         .bill-table td {
-            padding: 8px;
+            padding: 8px 5px;
             border-bottom: 1px solid #eee;
         }
 
@@ -331,25 +332,6 @@
             margin-top: 15px;
         }
 
-        .discount-box {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .discount-input {
-            width: 60px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .discount-label {
-            font-weight: bold;
-        }
-
         .empty-category {
             color: #999;
             font-style: italic;
@@ -357,38 +339,87 @@
             text-align: center;
         }
 
-        /* Stock Management Page */
-        .stock-container {
+        .bill-table .discount-input {
+            width: 40px;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Analytics Page Styles */
+        .analytics-container {
             padding: 15px;
-        }
-
-        .stock-summary {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .summary-card {
+        .analytics-card {
             background: white;
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
         }
 
-        .summary-card h3 {
+        .analytics-title {
             color: var(--primary-color);
-            margin-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
             font-size: 16px;
         }
 
-        .summary-card .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+        /* Circular Progress for Daily Sales */
+        .progress-container {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
         }
 
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-circle-bg {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 10;
+        }
+
+        .progress-circle-fill {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Stock Analysis Table */
         .stock-table {
             width: 100%;
             border-collapse: collapse;
@@ -402,61 +433,26 @@
         }
 
         .stock-table td {
-            padding: 10px;
+            padding: 8px 10px;
             border-bottom: 1px solid #eee;
         }
 
-        .stock-table tr:hover {
-            background-color: #f9f9f9;
+        .good-stock {
+            background-color: #e8f5e9;
         }
 
-        .stock-actions {
-            display: flex;
-            gap: 5px;
+        .low-stock-row {
+            background-color: #fff8e1;
         }
 
-        .stock-filter {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .stock-filter select, .stock-filter input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .best-sellers {
-            margin-top: 30px;
-        }
-
-        .best-seller-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .best-seller-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .restock-needed {
-            margin-top: 30px;
-        }
-
-        .restock-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            color: #d32f2f;
-            font-weight: bold;
-        }
-
-        .restock-item:hover {
+        .dead-stock {
             background-color: #ffebee;
+        }
+
+        /* Sales Chart Container */
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -465,7 +461,7 @@
     <div class="nav">
         <button class="nav-button active" onclick="showPage('billing')">Billing</button>
         <button class="nav-button" onclick="showPage('inventory')">Inventory</button>
-        <button class="nav-button" onclick="showPage('stock')">Stock Management</button>
+        <button class="nav-button" onclick="showPage('analytics')">Analytics</button>
     </div>
 
     <!-- Billing Page -->
@@ -508,6 +504,7 @@
                             <th>Code</th>
                             <th>Name</th>
                             <th>Price</th>
+                            <th>Disc%</th>
                             <th>Qty</th>
                             <th>Total</th>
                             <th>Action</th>
@@ -516,22 +513,17 @@
                     <tbody id="billItems"></tbody>
                     <tfoot>
                         <tr class="total-row">
-                            <td colspan="4">Subtotal</td>
+                            <td colspan="5">Subtotal</td>
                             <td id="subtotalAmount">₹0</td>
                             <td></td>
                         </tr>
                         <tr class="grand-total">
-                            <td colspan="4">Grand Total</td>
+                            <td colspan="5">Grand Total</td>
                             <td id="grandTotal">₹0</td>
                             <td></td>
                         </tr>
                     </tfoot>
                 </table>
-
-                <div class="discount-box">
-                    <span class="discount-label">Discount (%):</span>
-                    <input type="number" id="discountPercentage" class="discount-input" min="0" max="100" value="0" onchange="calculateGrandTotal()">
-                </div>
                 
                 <div class="payment-methods">
                     <div class="section-title">Payment Method</div>
@@ -571,72 +563,68 @@
         </div>
     </div>
 
-    <!-- Stock Management Page -->
-    <div id="stock-page" class="main-container">
-        <div class="stock-container">
-            <h2>Stock Management</h2>
-            
-            <div class="stock-summary">
-                <div class="summary-card">
-                    <h3>Total Products</h3>
-                    <div class="value" id="totalProducts">0</div>
+    <!-- Analytics Page -->
+    <div id="analytics-page" class="main-container">
+        <div class="analytics-container">
+            <!-- Daily Sales Card -->
+            <div class="analytics-card">
+                <div class="analytics-title">Daily Sales Performance</div>
+                <div class="progress-container">
+                    <svg class="progress-circle" viewBox="0 0 100 100">
+                        <circle class="progress-circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="progress-circle-fill" cx="50" cy="50" r="45" 
+                                stroke-dasharray="283" stroke-dashoffset="283"></circle>
+                    </svg>
+                    <div class="progress-text">
+                        <div class="progress-value" id="daily-sales-value">₹0</div>
+                        <div class="progress-label">Today's Sales</div>
+                    </div>
                 </div>
-                <div class="summary-card">
-                    <h3>Total Items</h3>
-                    <div class="value" id="totalItems">0</div>
-                </div>
-                <div class="summary-card">
-                    <h3>Low Stock</h3>
-                    <div class="value" id="lowStockItems">0</div>
-                </div>
-                <div class="summary-card">
-                    <h3>Out of Stock</h3>
-                    <div class="value" id="outOfStockItems">0</div>
+                <div id="daily-sales-details"></div>
+            </div>
+
+            <!-- Stock Analysis Card -->
+            <div class="analytics-card">
+                <div class="analytics-title">Stock Analysis</div>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-analysis-body">
+                        <!-- Will be filled by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Product Performance Card (Full Width) -->
+            <div class="analytics-card" style="grid-column: span 2;">
+                <div class="analytics-title">Top Performing Products</div>
+                <div id="top-products-chart" class="chart-container">
+                    <!-- Chart will be rendered here -->
                 </div>
             </div>
-            
-            <div class="stock-filter">
-                <select id="stockCategoryFilter" onchange="filterStock()">
-                    <option value="">All Categories</option>
-                    <option value="Sarees">Sarees</option>
-                    <option value="Chudidhars">Chudidhars</option>
-                    <option value="Blouses">Blouses</option>
-                    <option value="Nighties">Nighties</option>
-                    <option value="Dhotis">Dhotis</option>
-                    <option value="In-skirts">In-skirts</option>
-                </select>
-                <input type="text" id="stockSearch" placeholder="Search products..." oninput="filterStock()">
-            </div>
-            
-            <table class="stock-table">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Sold</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="stockTableBody">
-                    <!-- Stock items will be added here dynamically -->
-                </tbody>
-            </table>
-            
-            <div class="best-sellers">
-                <h3>Best Selling Products</h3>
-                <div id="bestSellersList">
-                    <!-- Best sellers will be added here dynamically -->
-                </div>
-            </div>
-            
-            <div class="restock-needed">
-                <h3>Items Needing Restock</h3>
-                <div id="restockList">
-                    <!-- Items needing restock will be added here dynamically -->
-                </div>
+
+            <!-- Dead Stock Card -->
+            <div class="analytics-card" style="grid-column: span 2;">
+                <div class="analytics-title">Dead Stock (No sales in last 30 days)</div>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Stock Qty</th>
+                            <th>Last Sale</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dead-stock-body">
+                        <!-- Will be filled by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -796,14 +784,11 @@
             });
             event.target.classList.add('active');
             
-            // Refresh inventory if needed
+            // Refresh data if needed
             if (pageId === 'inventory') {
                 displaySavedBills();
-            } else if (pageId === 'stock') {
-                displayStockSummary();
-                displayStockTable();
-                displayBestSellers();
-                displayRestockNeeded();
+            } else if (pageId === 'analytics') {
+                updateAnalytics();
             }
         }
 
@@ -842,12 +827,17 @@
                 const itemCard = document.createElement('div');
                 itemCard.className = 'item-card';
                 
-                // Determine stock status class
+                // Enhanced stock display
+                let stockText = '';
                 let stockStatusClass = '';
                 if (product.qty <= 0) {
+                    stockText = 'Out of Stock';
                     stockStatusClass = 'out-of-stock';
                 } else if (product.qty <= 3) {
+                    stockText = `Low Stock (${product.qty})`;
                     stockStatusClass = 'low-stock';
+                } else {
+                    stockText = `In Stock (${product.qty})`;
                 }
                 
                 itemCard.innerHTML = `
@@ -855,7 +845,7 @@
                     <div class="item-name">${product.name}</div>
                     <div class="item-price">₹${product.price}</div>
                     <div class="item-category">${product.category}</div>
-                    <div class="item-stock ${stockStatusClass}">${product.qty > 0 ? product.qty : 'Out'}</div>
+                    <div class="item-stock ${stockStatusClass}">${stockText}</div>
                 `;
                 
                 // Only allow adding to bill if in stock
@@ -889,9 +879,7 @@
                     } else {
                         const filteredProducts = products.filter(product => product.category === categoryName);
                         
-                        // Special handling for empty categories
-                        if (filteredProducts.length === 0 && 
-                            ["Blouses", "Nighties", "Dhotis", "In-skirts"].includes(categoryName)) {
+                        if (filteredProducts.length === 0) {
                             const itemsGrid = document.getElementById('itemsGrid');
                             itemsGrid.innerHTML = `<div class="empty-category">No ${categoryName.toLowerCase()} available in inventory</div>`;
                         } else {
@@ -919,38 +907,56 @@
             document.getElementById('newBillBtn').addEventListener('click', newBill);
         }
 
-        // Add product to bill
+        // Add product to bill with per-item discount
         function addToBill(product) {
-            const billItems = document.getElementById('billItems');
+            // First check current stock from products array (not just the displayed product)
+            const currentProduct = products.find(p => p.code === product.code);
+            if (!currentProduct || currentProduct.qty <= 0) {
+                alert('This item is now out of stock!');
+                // Refresh display to show current stock status
+                const activeCategory = document.querySelector('.category.active').textContent;
+                if (activeCategory === "All Products") {
+                    displayProducts(products);
+                } else {
+                    const filteredProducts = products.filter(p => p.category === activeCategory);
+                    displayProducts(filteredProducts);
+                }
+                return;
+            }
             
-            // Check if item already exists in bill
+            const billItems = document.getElementById('billItems');
             const existingRow = Array.from(billItems.children).find(row => 
                 row.cells[0].textContent === product.code
             );
             
             if (existingRow) {
-                // Check if we have enough stock
-                const currentQty = parseInt(existingRow.cells[3].textContent);
-                if (currentQty >= product.qty) {
-                    alert(`Only ${product.qty} items available in stock!`);
+                const currentQty = parseInt(existingRow.cells[4].textContent);
+                if (currentQty >= currentProduct.qty) {
+                    alert(`Only ${currentProduct.qty} items available in stock!`);
                     return;
                 }
                 
                 // Increase quantity
-                const qtyCell = existingRow.cells[3];
+                const qtyCell = existingRow.cells[4];
                 const newQty = currentQty + 1;
                 qtyCell.textContent = newQty;
                 
+                // Get current discount
+                const discountInput = existingRow.cells[3].querySelector('input');
+                const discount = discountInput ? parseFloat(discountInput.value) || 0 : 0;
+                
                 // Update total
                 const price = parseFloat(existingRow.cells[2].textContent.replace('₹', ''));
-                existingRow.cells[4].textContent = `₹${(price * newQty).toFixed(2)}`;
+                existingRow.cells[5].textContent = `₹${(price * (1 - discount/100) * newQty).toFixed(2)}`;
             } else {
-                // Add new row
+                // Add new row with discount input
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${product.code}</td>
                     <td>${product.name}</td>
                     <td>₹${product.price}</td>
+                    <td><input type="number" class="discount-input" value="0" min="0" max="100" 
+                         onchange="updateItemTotals(this)" style="width: 40px;"></td>
                     <td>1</td>
                     <td>₹${product.price}</td>
                     <td><button class="btn btn-sm" onclick="removeFromBill(this)">Remove</button></td>
@@ -960,15 +966,20 @@
             
             // Update subtotal and grand total
             updateSubtotal();
-            calculateGrandTotal();
         }
 
-        // Remove item from bill
-        function removeFromBill(button) {
-            const row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
+        // Update item totals when discount changes
+        function updateItemTotals(input) {
+            const row = input.parentNode.parentNode;
+            const price = parseFloat(row.cells[2].textContent.replace('₹', ''));
+            const discount = parseFloat(input.value) || 0;
+            const quantity = parseInt(row.cells[4].textContent);
+            
+            // Update total
+            row.cells[5].textContent = `₹${(price * (1 - discount/100) * quantity).toFixed(2)}`;
+            
+            // Update totals
             updateSubtotal();
-            calculateGrandTotal();
         }
 
         // Update subtotal
@@ -977,21 +988,18 @@
             let subtotal = 0;
             
             for (let row of rows) {
-                subtotal += parseFloat(row.cells[4].textContent.replace('₹', ''));
+                subtotal += parseFloat(row.cells[5].textContent.replace('₹', ''));
             }
             
             document.getElementById('subtotalAmount').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('grandTotal').textContent = `₹${subtotal.toFixed(2)}`;
         }
 
-        // Calculate grand total with discount
-        function calculateGrandTotal() {
-            const subtotal = parseFloat(document.getElementById('subtotalAmount').textContent.replace('₹', '')) || 0;
-            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
-            
-            const discountAmount = subtotal * (discountPercentage / 100);
-            const grandTotal = subtotal - discountAmount;
-            
-            document.getElementById('grandTotal').textContent = `₹${grandTotal.toFixed(2)}`;
+        // Remove item from bill
+        function removeFromBill(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateSubtotal();
         }
 
         // Print bill
@@ -999,13 +1007,12 @@
             window.print();
         }
 
-        // Save bill
+        // Save bill with per-item discounts
         function saveBill() {
             const billNumber = document.getElementById('billNumber').value;
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
-            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
             
             // Validate
             if (document.getElementById('billItems').children.length === 0) {
@@ -1019,7 +1026,8 @@
             
             for (let row of billItems) {
                 const code = row.cells[0].textContent;
-                const quantity = parseInt(row.cells[3].textContent);
+                const quantity = parseInt(row.cells[4].textContent);
+                const discount = parseFloat(row.cells[3].querySelector('input').value) || 0;
                 
                 // Find product in inventory
                 const productIndex = products.findIndex(p => p.code === code);
@@ -1033,8 +1041,9 @@
                         code,
                         name: row.cells[1].textContent,
                         price: parseFloat(row.cells[2].textContent.replace('₹', '')),
+                        discount,
                         quantity,
-                        total: parseFloat(row.cells[4].textContent.replace('₹', ''))
+                        total: parseFloat(row.cells[5].textContent.replace('₹', ''))
                     });
                 }
             }
@@ -1050,7 +1059,6 @@
                 paymentMethod,
                 items: itemsData,
                 subtotal: parseFloat(document.getElementById('subtotalAmount').textContent.replace('₹', '')),
-                discountPercentage,
                 grandTotal: parseFloat(document.getElementById('grandTotal').textContent.replace('₹', ''))
             };
             
@@ -1060,6 +1068,15 @@
             
             // Update bill number for next bill
             currentBillNumber = parseInt(billNumber) + 1;
+            
+            // Refresh the product display to show updated stock levels
+            const activeCategory = document.querySelector('.category.active').textContent;
+            if (activeCategory === "All Products") {
+                displayProducts(products);
+            } else {
+                const filteredProducts = products.filter(product => product.category === activeCategory);
+                displayProducts(filteredProducts);
+            }
             
             alert(`Bill ${billNumber} saved successfully!`);
             showPage('inventory');
@@ -1074,7 +1091,6 @@
                 // Reset totals
                 document.getElementById('subtotalAmount').textContent = '₹0';
                 document.getElementById('grandTotal').textContent = '₹0';
-                document.getElementById('discountPercentage').value = '0';
                 
                 // Set new bill number
                 document.getElementById('billNumber').value = currentBillNumber;
@@ -1117,8 +1133,9 @@
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Qty</th>
                                     <th>Price</th>
+                                    <th>Disc%</th>
+                                    <th>Qty</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -1126,27 +1143,24 @@
                                 ${bill.items.map(item => `
                                     <tr>
                                         <td>${item.code} - ${item.name}</td>
-                                        <td>${item.quantity}</td>
                                         <td>₹${item.price.toFixed(2)}</td>
+                                        <td>${item.discount}%</td>
+                                        <td>${item.quantity}</td>
                                         <td>₹${item.total.toFixed(2)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3">Subtotal</td>
+                                    <td colspan="4">Subtotal</td>
                                     <td>₹${bill.subtotal.toFixed(2)}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3">Discount (${bill.discountPercentage}%)</td>
-                                    <td>₹${(bill.subtotal * (bill.discountPercentage/100)).toFixed(2)}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Grand Total</td>
+                                    <td colspan="4">Grand Total</td>
                                     <td>₹${bill.grandTotal.toFixed(2)}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3">Payment Method</td>
+                                    <td colspan="4">Payment Method</td>
                                     <td>${bill.paymentMethod}</td>
                                 </tr>
                             </tfoot>
@@ -1179,195 +1193,134 @@
             });
         }
 
-        // ========== STOCK MANAGEMENT PAGE FUNCTIONS ==========
-        // Display stock summary
-        function displayStockSummary() {
-            const totalProducts = products.length;
-            const totalItems = products.reduce((sum, product) => sum + product.qty, 0);
-            const lowStockItems = products.filter(p => p.qty > 0 && p.qty <= 3).length;
-            const outOfStockItems = products.filter(p => p.qty <= 0).length;
-            
-            document.getElementById('totalProducts').textContent = totalProducts;
-            document.getElementById('totalItems').textContent = totalItems;
-            document.getElementById('lowStockItems').textContent = lowStockItems;
-            document.getElementById('outOfStockItems').textContent = outOfStockItems;
+        // ========== ANALYTICS PAGE FUNCTIONS ==========
+        function updateAnalytics() {
+            updateDailySales();
+            updateStockAnalysis();
+            updateTopProducts();
+            updateDeadStock();
         }
 
-        // Display stock table
-        function displayStockTable() {
-            const stockTableBody = document.getElementById('stockTableBody');
-            stockTableBody.innerHTML = '';
+        function updateDailySales() {
+            const today = new Date().toISOString().split('T')[0];
+            const dailySales = savedBills
+                .filter(bill => bill.date === today)
+                .reduce((total, bill) => total + bill.grandTotal, 0);
+            
+            // Set a daily target (you can adjust this)
+            const dailyTarget = 10000; // ₹10,000 daily target
+            const progress = Math.min((dailySales / dailyTarget) * 100, 100);
+            
+            // Update the circular progress
+            const circle = document.querySelector('.progress-circle-fill');
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference - (progress / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            // Update the text
+            document.getElementById('daily-sales-value').textContent = `₹${dailySales.toFixed(2)}`;
+            document.getElementById('daily-sales-details').innerHTML = `
+                <div style="text-align: center; margin-top: 10px;">
+                    <div>Daily Target: ₹${dailyTarget.toFixed(2)}</div>
+                    <div>Progress: ${progress.toFixed(1)}%</div>
+                </div>
+            `;
+        }
+
+        function updateStockAnalysis() {
+            // Categorize stock
+            let goodStock = 0, goodStockValue = 0;
+            let lowStock = 0, lowStockValue = 0;
+            let deadStock = 0, deadStockValue = 0;
             
             products.forEach(product => {
-                const row = document.createElement('tr');
-                
-                // Determine stock status class
-                let stockStatusClass = '';
-                if (product.qty <= 0) {
-                    stockStatusClass = 'out-of-stock';
+                const value = product.price * product.qty;
+                if (product.qty === 0) {
+                    deadStock++;
+                    deadStockValue += value;
                 } else if (product.qty <= 3) {
-                    stockStatusClass = 'low-stock';
+                    lowStock++;
+                    lowStockValue += value;
+                } else {
+                    goodStock++;
+                    goodStockValue += value;
                 }
+            });
+            
+            // Update the table
+            const tableBody = document.getElementById('stock-analysis-body');
+            tableBody.innerHTML = `
+                <tr class="good-stock">
+                    <td>Good Stock (>3 items)</td>
+                    <td>${goodStock}</td>
+                    <td>₹${goodStockValue.toFixed(2)}</td>
+                </tr>
+                <tr class="low-stock-row">
+                    <td>Low Stock (1-3 items)</td>
+                    <td>${lowStock}</td>
+                    <td>₹${lowStockValue.toFixed(2)}</td>
+                </tr>
+                <tr class="dead-stock">
+                    <td>Dead Stock (0 items)</td>
+                    <td>${deadStock}</td>
+                    <td>₹${deadStockValue.toFixed(2)}</td>
+                </tr>
+            `;
+        }
+
+        function updateTopProducts() {
+            // Get top 5 selling products
+            const topProducts = [...products]
+                .filter(p => p.sold > 0)
+                .sort((a, b) => b.sold - a.sold)
+                .slice(0, 5);
+            
+            // Simple text-based chart
+            const chartContainer = document.getElementById('top-products-chart');
+            chartContainer.innerHTML = `
+                <div style="display: flex; height: 100%; align-items: flex-end; gap: 20px; justify-content: center;">
+                    ${topProducts.map(product => `
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="width: 40px; background: var(--primary-color); height: ${(product.sold / topProducts[0].sold) * 100}%;"></div>
+                            <div style="margin-top: 5px; font-size: 12px; text-align: center;">
+                                ${product.code}<br>${product.sold} sold
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${topProducts.length === 0 ? '<div style="text-align: center; padding: 20px;">No sales data yet</div>' : ''}
+            `;
+        }
+
+        function updateDeadStock() {
+            // Find products with no sales in last 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const deadStockItems = products.filter(product => {
+                // Check if product has any sales
+                if (product.sold === 0) return true;
                 
-                row.innerHTML = `
+                // Check if any bills contain this product in last 30 days
+                const productBills = savedBills.filter(bill => 
+                    bill.items.some(item => item.code === product.code) &&
+                    new Date(bill.date) >= thirtyDaysAgo
+                );
+                
+                return productBills.length === 0;
+            });
+            
+            // Update the table
+            const tableBody = document.getElementById('dead-stock-body');
+            tableBody.innerHTML = deadStockItems.map(product => `
+                <tr>
                     <td>${product.code}</td>
                     <td>${product.name}</td>
                     <td>${product.category}</td>
-                    <td>₹${product.price}</td>
-                    <td class="${stockStatusClass}">${product.qty}</td>
-                    <td>${product.sold}</td>
-                    <td class="stock-actions">
-                        <button class="btn btn-sm" onclick="addStock('${product.code}')">+ Add</button>
-                        <button class="btn btn-sm" onclick="editProduct('${product.code}')">Edit</button>
-                    </td>
-                `;
-                
-                stockTableBody.appendChild(row);
-            });
-        }
-
-        // Filter stock table
-        function filterStock() {
-            const categoryFilter = document.getElementById('stockCategoryFilter').value;
-            const searchTerm = document.getElementById('stockSearch').value.toLowerCase();
-            
-            const filteredProducts = products.filter(product => {
-                const matchesCategory = !categoryFilter || product.category === categoryFilter;
-                const matchesSearch = !searchTerm || 
-                    product.code.toLowerCase().includes(searchTerm) || 
-                    product.name.toLowerCase().includes(searchTerm);
-                return matchesCategory && matchesSearch;
-            });
-            
-            const stockTableBody = document.getElementById('stockTableBody');
-            stockTableBody.innerHTML = '';
-            
-            if (filteredProducts.length === 0) {
-                stockTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-category">No products match your criteria</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            filteredProducts.forEach(product => {
-                const row = document.createElement('tr');
-                
-                // Determine stock status class
-                let stockStatusClass = '';
-                if (product.qty <= 0) {
-                    stockStatusClass = 'out-of-stock';
-                } else if (product.qty <= 3) {
-                    stockStatusClass = 'low-stock';
-                }
-                
-                row.innerHTML = `
-                    <td>${product.code}</td>
-                    <td>${product.name}</td>
-                    <td>${product.category}</td>
-                    <td>₹${product.price}</td>
-                    <td class="${stockStatusClass}">${product.qty}</td>
-                    <td>${product.sold}</td>
-                    <td class="stock-actions">
-                        <button class="btn btn-sm" onclick="addStock('${product.code}')">+ Add</button>
-                        <button class="btn btn-sm" onclick="editProduct('${product.code}')">Edit</button>
-                    </td>
-                `;
-                
-                stockTableBody.appendChild(row);
-            });
-        }
-
-        // Display best sellers
-        function displayBestSellers() {
-            const bestSellersList = document.getElementById('bestSellersList');
-            bestSellersList.innerHTML = '';
-            
-            // Sort by most sold
-            const sortedBySales = [...products].sort((a, b) => b.sold - a.sold).slice(0, 5);
-            
-            if (sortedBySales.length === 0) {
-                bestSellersList.innerHTML = '<div class="empty-category">No sales data available yet</div>';
-                return;
-            }
-            
-            sortedBySales.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'best-seller-item';
-                item.innerHTML = `
-                    <span>${product.name} (${product.code})</span>
-                    <span>Sold: ${product.sold}</span>
-                `;
-                bestSellersList.appendChild(item);
-            });
-        }
-
-        // Display items needing restock
-        function displayRestockNeeded() {
-            const restockList = document.getElementById('restockList');
-            restockList.innerHTML = '';
-            
-            // Get items with low or no stock
-            const restockItems = products.filter(p => p.qty <= 3);
-            
-            if (restockItems.length === 0) {
-                restockList.innerHTML = '<div class="empty-category">All items have sufficient stock</div>';
-                return;
-            }
-            
-            // Sort by stock level (lowest first)
-            restockItems.sort((a, b) => a.qty - b.qty);
-            
-            restockItems.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'restock-item';
-                item.innerHTML = `
-                    <span>${product.name} (${product.code})</span>
-                    <span>Stock: ${product.qty}</span>
-                `;
-                restockList.appendChild(item);
-            });
-        }
-
-        // Add stock to a product
-        function addStock(productCode) {
-            const product = products.find(p => p.code === productCode);
-            if (!product) return;
-            
-            const quantity = prompt(`Enter quantity to add to ${product.name} (${productCode}):`, '1');
-            if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
-                product.qty += parseInt(quantity);
-                localStorage.setItem('sareeShopProducts', JSON.stringify(products));
-                displayStockSummary();
-                displayStockTable();
-                displayRestockNeeded();
-                alert(`Added ${quantity} items to ${product.name}. New stock: ${product.qty}`);
-            }
-        }
-
-        // Edit product details
-        function editProduct(productCode) {
-            const product = products.find(p => p.code === productCode);
-            if (!product) return;
-            
-            const newName = prompt('Enter new product name:', product.name);
-            if (newName === null) return;
-            
-            const newPrice = prompt('Enter new price:', product.price);
-            if (newPrice === null) return;
-            
-            const newCategory = prompt('Enter new category:', product.category);
-            if (newCategory === null) return;
-            
-            // Update product
-            product.name = newName;
-            product.price = parseFloat(newPrice);
-            product.category = newCategory;
-            
-            localStorage.setItem('sareeShopProducts', JSON.stringify(products));
-            displayStockTable();
-            alert('Product updated successfully!');
+                    <td>${product.qty}</td>
+                    <td>${product.sold > 0 ? 'Over 30 days ago' : 'Never sold'}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align: center;">No dead stock found</td></tr>';
         }
     </script>
 </body>
